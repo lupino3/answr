@@ -1,0 +1,5 @@
+cron: 
+- description: answr to people
+  url: /twitterbot
+  schedule: every 1 mins
+

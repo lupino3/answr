@@ -1,0 +1,32 @@
+application: answr-it
+version: 12
+runtime: python
+api_version: 1
+
+handlers:
+- url: /populate
+  script: populate.py
+
+- url: /answr
+  script: main.py
+
+- url: /twitterbot
+  login: admin
+  script: twitterbot.py
+
+- url: /_ah/xmpp/message/chat/
+  script: xmpp.py
+
+- url: /
+  static_files: static/index.html
+  upload: static/index.html
+
+- url: /css
+  static_dir: static/css
+
+- url: /img
+  static_dir: static/img
+
+
+inbound_services:
+- xmpp_message

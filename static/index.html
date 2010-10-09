@@ -1,0 +1,123 @@
+<!docTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+    <head>
+        <title>answr.it (BETA) You can ask him everything!</title>
+
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Content-Style-Type" content="text/css">
+        <meta http-equiv="Content-Script-Type" content="text/javascript">
+
+        <link rel="icon" href="img/favicon.ico" />
+		<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"> </script>
+		
+        <script>
+            function fbs_click(idd) {
+                u='http://answr-it.appspot.com';
+                t=document.title;
+                window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');
+                return false;
+            }
+        </script>
+
+<script type="text/javascript">
+
+
+var first = true;
+function answrit(id){
+	if(first){
+		if(id>0) $("input#input_cerca").val($("#domanda_"+id).html());
+		
+		var domanda = $("input#input_cerca").serialize();
+		if($("input#input_cerca").val() == "Type a question" || $("input#input_cerca").val() == ""){
+			alert("You must ask something!");
+		}
+		else{
+			$("#risposta").hide();
+			$("#loading").show();
+            $.get("/answr", {}, 
+                function(data){
+                    data = JSON.parse(data);
+
+                    $("#risposta").text(data["text"]);
+					$("#loading").fadeOut("slow", function(){
+						$("#risposta").fadeIn("slow",function(){
+							
+							$("input#input_cerca").attr("disabled", true);
+							$("input#input_cerca").css("width", "750px");
+							$("#img_cerca").fadeOut();
+							$("#risposta").animate({ 
+									fontSize: 40
+								}, 1500 ,function() {
+									$("#reload").fadeIn('slow');
+									lampeggia();
+								}
+							);
+						});
+					});
+				}
+			);
+		}
+		first = false;
+	}
+	return false;
+}
+
+function lampeggia(){
+	$('#reload_text').fadeIn('slow',function(){
+		$('#reload_text').fadeOut('slow',function(){
+			$('#previous').fadeOut('slow');
+			lampeggia();
+		})
+	});
+}
+
+
+</script>
+    </head>
+    <body >
+    <div id="content">
+    	<div id="header">
+        <a href="index.html"><img id="logo" src="img/logo.png" border="0"></a>
+			<img id="border_right" src="img/stripes_right.png">
+		</div>
+		<div id="answr" >
+			<div id="cerca" >
+				<form name="rispondi" onSubmit="return answrit()">
+				<input type="text" value="Type a question" name="cerca" id="input_cerca" onclick="$('input#input_cerca').val('')" onsubmit="answrit()"/>
+				<img id="img_cerca" src="img/answrit.png" title="Find the answr on answr.it!" onclick="answrit()">
+				</form>
+			</div>
+			<div id="loading" style="display:none"><img src="img/loading.gif" title="Caricamento"/></div>
+			<div  style="display:none;text-align:center" id="risposta"></div>
+			<div  style="display:none;text-align:center" id="reload">
+				<a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
+				<b id="reload_text" style="display:none">Please click to restart</b></a>
+			</div>
+			
+		</div>		
+	</div>
+    <div id="links"  style="background-color: rgb(244, 241, 235); width: 160px; text-align: center;" class="text_4">
+		<a title="segnala ANSWR.IT a Facebook.com" href="http://www.facebook.com/sharer.php?u=http://answr-it.appspot.com&title=Risponde a tutto!"  class="lnkInner" style="text-decoration: none;" target="_blank"> <img width="18" height="18" border="0" alt="Segnala ANSWR.IT a facebook.com" title="Segnala ANSWR.IT a facebook.com" src="img/facebook.png"/> 
+			Facebook
+		</a>           
+		<a title="Bookmark Answer.it at del.icio.us" href="http://del.icio.us/post?url=http://answr-it.appspot.com&title=It%20Answers%20All%20Question" class="lnkInner" style="text-decoration: none;" target="_blank">
+			<img width="18" height="18" border="0" alt="Bookmark ANSWR.IT at del.icio.us" title="Bookmark answr.it at del.icio.us" src="img/delicious.png"/> 
+			Delicious
+		</a>   
+	</div>
+
+	<script type="text/javascript">
+        var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+        document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+	</script>
+    
+	<script type="text/javascript">
+        var pageTracker = _gat._getTracker("UA-3447284-1");
+        pageTracker._initData();
+        pageTracker._trackPageview();
+	</script>
+    </body>
+</html>
