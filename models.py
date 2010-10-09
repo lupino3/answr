@@ -38,21 +38,30 @@ class Answr(db.Model):
 
 class ApplicationData(db.Model):
     name = db.StringProperty()
-    value = db.IntegerProperty()
+    value = db.StringProperty()
+
+    @staticmethod
+    def getTwitterAuth():
+        consumer_token  = db.Query(ApplicationData).filter('name =', 'twitter_oauth_consumer_key').get()
+        consumer_secret = db.Query(ApplicationData).filter('name =', 'twitter_oauth_consumer_secret').get()
+        key = db.Query(ApplicationData).filter('name =', 'twitter_oauth_key').get()
+        secret = db.Query(ApplicationData).filter('name =', 'twitter_oauth_secret').get()
+
+        return (consumer_token.value, consumer_secret.value, key.value, secret.value)
 
     @staticmethod
     def getAnswrCounter():
         counter = db.Query(ApplicationData).filter('name =', 'answrcounter').get()
         if not counter:
             logging.info('First access to the counter')
-            counter = ApplicationData(name = 'answrcounter', value = 0)
+            counter = ApplicationData(name = 'answrcounter', value = "0")
 
         return counter
 
     @staticmethod
     def incrementAnswrCounter():
         counter = ApplicationData.getAnswrCounter()
-        counter.value += 1
+        counter.value = str(int(counter.value) + 1)
         counter.put()
 
     @staticmethod
@@ -62,13 +71,13 @@ class ApplicationData(db.Model):
             logging.info('First answer to tweets')
             return None
 
-        return id.value
+        return int(id.value)
 
     @staticmethod
     def setLastAnswredTweetId(new_id):
         id = db.Query(ApplicationData).filter('name =', 'lastansweredtweetid').get()
         if id is None:
-            id = ApplicationData(name = 'lastansweredtweetid', value = 0)
+            id = ApplicationData(name = 'lastansweredtweetid', value = "0")
 
-        id.value = new_id
+        id.value = str(new_id)
         id.put()

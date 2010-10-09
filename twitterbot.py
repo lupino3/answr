@@ -5,7 +5,11 @@ from models import ApplicationData, Answr
 logging.info('Running the answr twitterbot!')
 
 # 1. Login
-auth = tweepy.BasicAuthHandler("answrit", "***")
+(ctoken, csecret, key, secret) = ApplicationData.getTwitterAuth()
+
+auth = tweepy.OAuthHandler(ctoken, csecret)
+auth.set_access_token(key, secret)
+
 api = tweepy.API(auth)
 logging.info('Login done!')
 
