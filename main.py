@@ -1,4 +1,5 @@
 import random
+import logging
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
@@ -7,6 +8,7 @@ from models import Answr
 
 class AnswrApp(webapp.RequestHandler):
     def get(self):
+        logging.info("Language: %s" % self.request.headers['Accept-Language'])
         self.response.headers['Content-Type'] = 'application/json'
         random_answr = Answr.get_random()
         self.response.out.write(random_answr.to_json())

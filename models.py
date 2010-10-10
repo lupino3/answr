@@ -10,30 +10,37 @@ class Answr(db.Model):
     # phase
     rand = db.FloatProperty()
 
+    # Language
+    lang = db.StringProperty()
+
     def to_json(self):
         return '{"text" : "%s"}' % self.text
 
     @staticmethod
-    def get_random():
+    def get_random(lang = "it"):
         """Gets a random answr. The hypothesis is that there is an answr having
         rand = 1, so that the query always returns a value"""
-        answr = Answr.gql("WHERE rand >= :1 ORDER BY rand ASC LIMIT 1", random.random()).get()
+        answr = Answr.gql("WHERE rand >= :1 AND lang = :2 ORDER BY rand ASC LIMIT 1", random.random(), lang).get()
         return answr
 
     @staticmethod
-    def add_answr(answr_text, rand = None):
+    def add_answr(answr_text, lang, rand = None):
         if not rand:
             rand = random.random()
 
-        a = Answr(text = answr_text, rand = rand)
+        answr_text = unicode(answr_text, 'utf8')
+        a = Answr(text = answr_text, lang = lang, rand = rand)
         ApplicationData.incrementAnswrCounter()
         a.put()
 
 
 #class Question:
 #    """An answrd question."""
-#    text = db.StringProperty()
+#    question = db.StringProperty()
 #    answr = db.StringProperty()
+#    tech = db.StringProperty()
+#    who = db.StringProperty()
+#    lang = db.StringProperty()
 
 
 class ApplicationData(db.Model):
