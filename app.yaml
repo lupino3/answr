@@ -22,8 +22,7 @@ handlers:
   script: xmpp.py
 
 - url: /
-  static_files: static/index.html
-  upload: static/index.html
+  script: main.py
 
 - url: /css
   static_dir: static/css

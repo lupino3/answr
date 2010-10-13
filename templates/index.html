@@ -1,8 +1,8 @@
 <!docTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 
-<html lang="en">
+<html lang="{{ lang }}">
     <head>
-        <title>answr.it (BETA) You can ask him everything!</title>
+        <title>{{ title }}</title>
 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="Content-Style-Type" content="text/css">
@@ -22,13 +22,13 @@
                 if(id>0) $("input#input_cerca").val($("#domanda_"+id).html());
                 
                 var domanda = $("input#input_cerca").serialize();
-                if($("input#input_cerca").val() == "Type a question" || $("input#input_cerca").val() == ""){
-                    alert("You must ask something!");
+                if($("input#input_cerca").val() == "{{ type_your_question }}" || $("input#input_cerca").val() == ""){
+                    alert("{{ must_ask }}");
                 }
                 else{
                     $("#risposta").hide();
                     $("#loading").show();
-                    $.get("/answr", {}, 
+                    $.get("/answr?lang={{ lang }}", {}, 
                         function(data){
                             data = JSON.parse(data);
 
@@ -77,15 +77,15 @@
 		<div id="answr" >
 			<div id="cerca" >
 				<form name="rispondi" onSubmit="return answrit()">
-				<input type="text" value="Type a question" name="cerca" id="input_cerca" onclick="$('input#input_cerca').val('')" onsubmit="answrit()"/>
-				<img id="img_cerca" src="img/answrit.png" title="Find the answr on answr.it!" onclick="answrit()">
+                <input type="text" value="{{ type_your_question }}" name="cerca" id="input_cerca" onclick="$('input#input_cerca').val('')" onsubmit="answrit()"/>
+                <img id="img_cerca" src="img/answrit.png" title="{{ get_answer }}" onclick="answrit()">
 				</form>
 			</div>
-			<div id="loading" style="display:none"><img src="img/loading.gif" title="Caricamento"/></div>
+			<div id="loading" style="display:none"><img src="img/loading.gif" title="{{ loading }}"/></div>
 			<div  style="display:none;text-align:center" id="risposta"></div>
 			<div  style="display:none;text-align:center" id="reload">
 				<a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
-				<b id="reload_text" style="display:none">Please click to restart</b></a>
+                <b id="reload_text" style="display:none">{{ restart }}</b></a>
 			</div>
 			
 		</div>		
