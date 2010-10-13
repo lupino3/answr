@@ -29,16 +29,47 @@ class MainApp(webapp.RequestHandler):
             "restart" : "Fai clic per ricominciare"
         }
     }
-    def get(self):
-        try:
-            l = self.get_main_language(self.request.headers['Accept-Language'])
-            language_strings = MainApp.lang_strings[l]
-            
-        except Exception, e:
-            logging.warning("Errror during language detection: %s - switching back to en" % str(e))
-            language_strings = MainApp.lang_strings["en"]
+    
+    def detect_language(self):
+        """Returns the list of strings to be used for the detected language"""
+        l = None
 
+        # 1. If a language was specified in GET, use that language
+        if self.request.get('lang'):
+            l = self.request.get('lang')
+            logging.info('Language %s passed via GET' % l)
+
+        # 2. If no language was specified, get it from cookies
+        elif self.request.cookies.get('answrlang'):
+            l = self.request.cookies.get('answrlang')
+            logging.info('Language %s passed via cookies' % l)
+
+        # 3. If no cookies, try to detect
+        else:
+            try:
+                l = self.get_main_language(self.request.headers['Accept-Language'])
+            except Exception, e:
+                logging.warning("Error during language detection: %s - switching back to en" % str(e))
+                l = "en"
+
+        # Try to get strings for the detected language
+        try:
+            language_strings = MainApp.lang_strings[l]
+        except Exception, e:
+            logging.warning("Error during language detection: %s - switching back to en" % str(e))
+            l = "en"
+            language_strings = MainApp.lang_strings[l]
+
+        return (l, language_strings)
+
+    def get(self):
+        language, language_strings = self.detect_language()
         template_path = os.path.join(os.path.dirname(__file__), 'templates', 'index.html')
+
+        # Save to a cookie the detected language
+        self.response.headers.add_header('Set-Cookie', 'answrlang=%s' % language)
+
+        # Output the response
         self.response.out.write(template.render(template_path, language_strings))
 
     def get_main_language(self, accept_language):
