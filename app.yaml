@@ -1,10 +1,11 @@
 application: answr-it
-version: 18
+version: 21
 runtime: python
 api_version: 1
 
 handlers:
 - url: /populate
+  login: admin
   script: populate.py
 
 - url: /temp_populate
