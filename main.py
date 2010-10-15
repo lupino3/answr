@@ -6,7 +6,7 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 
-from models import Answr
+from models import Question, Answr
 
 class MainApp(webapp.RequestHandler):
     lang_strings = {
@@ -112,6 +112,10 @@ class AnswrApp(webapp.RequestHandler):
             lang = "en"
 
         random_answr = Answr.answr(lang)
+        question_id = Question.save(self.request.get('question'), random_answr.text, tech = 'web', lang = lang)
+        logging.info("Question saved. ID: " + str(question_id))
+        logging.info("Headers: " + str(self.response.headers))
+        
         self.response.out.write(random_answr.to_json())
 
 application = webapp.WSGIApplication([('/answr', AnswrApp), ('/', MainApp)], debug = True)

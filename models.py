@@ -2,16 +2,19 @@ from google.appengine.ext import db
 import logging
 import random
 
+# Not sure if I can put those lists in the Question class
+_TECHS = ['web', 'twitter', 'xmpp']
+
 class Question(db.Model):
     """An answrd question."""
     # The question asked
-    question = db.StringProperty()
+    text = db.StringProperty(required = True)
 
     # The answr given
-    answr = db.StringProperty()
+    answr = db.StringProperty(required = True)
 
-    # The technology used ('xmpp', 'twitter', 'web')
-    tech = db.StringProperty()
+    # The technology used
+    tech = db.StringProperty(choices = _TECHS)
 
     # An ID of who asked the question (xmpp_id, twitter_username, ip)
     who = db.StringProperty()
@@ -19,22 +22,32 @@ class Question(db.Model):
     # The language used
     lang = db.StringProperty()
 
+    # When the question was answrd (object creation time)
+    when = db.DateTimeProperty(auto_now_add = True)
+
+    @staticmethod
+    def save(text, answr, tech = None, who = None, lang = None):
+        """Saves data about a question and returns the ID of the saved
+        question"""
+        q = Question(text = unicode(text, 'utf8'), answr = unicode(answr, 'utf8'), tech = tech, who = who, lang = lang)
+        return q.put().id()
+
 class Answr(db.Model):
     """An answr that the magic chick will give to the user"""
-    text = db.StringProperty()
+    text = db.StringProperty(required = True)
 
     # A random number between 0 and 1, that will be used during the retrieval
     # phase
-    rand = db.FloatProperty()
+    rand = db.FloatProperty(required = True)
 
     # Language
-    lang = db.StringProperty()
+    lang = db.StringProperty(required = True)
 
     def to_json(self):
         return '{"text" : "%s"}' % self.text
 
     @staticmethod
-    def answr(lang = "it"):
+    def answr(lang = "en"):
         """Gets a random answr. The hypothesis is that there is an answr having
         rand = 1, so that the query always returns a value"""
         answr = Answr.gql("WHERE rand >= :1 AND lang = :2 ORDER BY rand ASC LIMIT 1", random.random(), lang).get()

@@ -1,6 +1,6 @@
 import logging
 import tweepy
-from models import ApplicationData, Answr
+from models import ApplicationData, Answr, Question
 
 logging.info('Running the answr twitterbot!')
 
@@ -26,7 +26,7 @@ for user in to_follow:
     except tweepy.TweepError, e:
         logging.warning(e)
 
-# 2. Lettura degli ultimi messaggi diretti a me
+# 2. Reading last messages sent to me
 last_id = ApplicationData.getLastAnswredTweetId()
 if not last_id:
     logging.info('First time that I answer!')
@@ -37,16 +37,18 @@ else:
 
 logging.info("Got %d mentions to answr!" % len(mentions))
 
-# 3. Risposta in maniera casuale a tutti 
+# 3. Random answrs for everybody!
 for status in mentions:
+    # TODO 3.1: implement basic language detection
     answr = Answr.answr().text
+    Question.save(status.text, answr, 'twitter', "@%s" % status.author.screen_name, "en")
     api.update_status("@%s %s" % (status.author.screen_name, answr), status.id)
     logging.info("I replied to @%s (%s) with %s, is that ok?" % (status.author.screen_name, status.text, answr))
 
-    # Non so in che ordine mi sono tornati gli status..
+    # I don't know the order of the IDs, so I have to check every time
     if status.id > last_id:
         last_id = status.id
 
-# 4. Salvataggio ultimo ID
+# 4. Save the last ID
 if last_id:
     ApplicationData.setLastAnswredTweetId(last_id)

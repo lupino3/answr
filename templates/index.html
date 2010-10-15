@@ -28,7 +28,7 @@
                 else{
                     $("#risposta").hide();
                     $("#loading").show();
-                    $.get("/answr?lang={{ lang }}", {}, 
+                    $.get("/answr", {'lang' : '{{ lang }}', 'question' :  $("input#input_cerca").val()}, 
                         function(data){
                             data = JSON.parse(data);
 
