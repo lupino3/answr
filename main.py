@@ -112,7 +112,7 @@ class AnswrApp(webapp.RequestHandler):
             lang = "en"
 
         random_answr = Answr.answr(lang)
-        question_id = Question.save(self.request.get('question'), random_answr.text, tech = 'web', lang = lang)
+        question_id = Question.save(self.request.get('question'), random_answr.text, tech = 'web', lang = lang, who = str(self.request.remote_addr))
         logging.info("Question saved. ID: " + str(question_id))
         logging.info("Headers: " + str(self.response.headers))
         
