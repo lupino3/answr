@@ -2,7 +2,7 @@ import random
 import logging
 import os
 
-from google.appengine.ext import webapp
+from google.appengine.ext import webapp, db
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 
@@ -17,7 +17,10 @@ class MainApp(webapp.RequestHandler):
             "must_ask" : "You must ask something!",
             "get_answer" : "Get your answer from answr.it!",
             "loading" : "Loading",
-            "restart" : "Please click to restart"
+            "restart" : "Please click to restart",
+            "i_asked" : "I asked to answr",
+            "and_he_replied" : "and he replied",
+            "ask_again" : "Ask another question!"
         },
         "it" : {
             "lang"  : "it",
@@ -26,7 +29,10 @@ class MainApp(webapp.RequestHandler):
             "must_ask" : "Devi chiedere qualcosa!",
             "get_answer" : "Fai la tua domanda ad answr.it!",
             "loading" : "Caricamento",
-            "restart" : "Fai clic per ricominciare"
+            "restart" : "Fai clic per ricominciare",
+            "i_asked" : "Ho chiesto ad answr",
+            "and_he_replied" : "e lui mi ha risposto",
+            "ask_again" : "Fai un'altra domanda!"
         }
     }
     
@@ -118,7 +124,28 @@ class AnswrApp(webapp.RequestHandler):
         
         self.response.out.write(random_answr.to_json())
 
-application = webapp.WSGIApplication([('/answr', AnswrApp), ('/', MainApp)], debug = True)
+class QuestionApp(webapp.RequestHandler):
+    def get(self):
+        try:
+            q = int(self.request.get('id'))
+            logging.info('Question ID: %d' % q)
+            question = Question.get_by_id(q)
+
+            # Using the language of the question
+            template_strings = MainApp.lang_strings[question.lang]
+            template_strings['question'] = question.text
+            template_strings['answr'] = question.answr
+            logging.info("%s -> %s" % (question.text, question.answr))
+
+            template_path = os.path.join(os.path.dirname(__file__), 'templates', 'q.html')
+
+            # Output the response
+            self.response.out.write(template.render(template_path, template_strings))
+        except Exception, e:
+            logging.warning('Something went wrong with question permalink: %s' % str(e))
+            self.redirect('/')
+
+application = webapp.WSGIApplication([('/answr', AnswrApp), ('/', MainApp), ('/q', QuestionApp)], debug = True)
 
 if __name__ == '__main__':
     run_wsgi_app(application)

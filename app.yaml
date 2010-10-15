@@ -1,9 +1,18 @@
 application: answr-it
-version: 25
+version: 27
 runtime: python
 api_version: 1
 
 handlers:
+- url: /
+  script: main.py
+
+- url: /answr
+  script: main.py
+
+- url: /q
+  script: main.py
+
 - url: /populate
   login: admin
   script: populate.py
@@ -12,9 +21,6 @@ handlers:
   login: admin
   script: temp.py
 
-- url: /answr
-  script: main.py
-
 - url: /twitterbot
   login: admin
   script: twitterbot.py
@@ -22,15 +28,11 @@ handlers:
 - url: /_ah/xmpp/message/chat/
   script: xmpp.py
 
-- url: /
-  script: main.py
-
 - url: /css
   static_dir: static/css
 
 - url: /img
   static_dir: static/img
-
 
 inbound_services:
 - xmpp_message
