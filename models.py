@@ -29,7 +29,7 @@ class Question(db.Model):
     def save(text, answr, tech = None, who = None, lang = None):
         """Saves data about a question and returns the ID of the saved
         question"""
-        q = Question(text = unicode(text, 'utf8'), answr = unicode(answr, 'utf8'), tech = tech, who = who, lang = lang)
+        q = Question(text = text, answr = answr, tech = tech, who = who, lang = lang)
         return q.put().id()
 
 class Answr(db.Model):
