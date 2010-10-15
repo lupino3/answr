@@ -106,10 +106,12 @@ class AnswrApp(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'application/json'
         try:
-            random_answr = Answr.get_random(self.request.get('lang'))
+            lang = self.request.get('lang')
         except Exception, e:
             logging.warning('Failed to get parameter lang, switching back to default')
-            random_answr = Answr.get_random()
+            lang = "en"
+
+        random_answr = Answr.answr(lang)
         self.response.out.write(random_answr.to_json())
 
 application = webapp.WSGIApplication([('/answr', AnswrApp), ('/', MainApp)], debug = True)

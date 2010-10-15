@@ -2,6 +2,23 @@ from google.appengine.ext import db
 import logging
 import random
 
+class Question(db.Model):
+    """An answrd question."""
+    # The question asked
+    question = db.StringProperty()
+
+    # The answr given
+    answr = db.StringProperty()
+
+    # The technology used ('xmpp', 'twitter', 'web')
+    tech = db.StringProperty()
+
+    # An ID of who asked the question (xmpp_id, twitter_username, ip)
+    who = db.StringProperty()
+
+    # The language used
+    lang = db.StringProperty()
+
 class Answr(db.Model):
     """An answr that the magic chick will give to the user"""
     text = db.StringProperty()
@@ -17,7 +34,7 @@ class Answr(db.Model):
         return '{"text" : "%s"}' % self.text
 
     @staticmethod
-    def get_random(lang = "it"):
+    def answr(lang = "it"):
         """Gets a random answr. The hypothesis is that there is an answr having
         rand = 1, so that the query always returns a value"""
         answr = Answr.gql("WHERE rand >= :1 AND lang = :2 ORDER BY rand ASC LIMIT 1", random.random(), lang).get()
@@ -32,15 +49,6 @@ class Answr(db.Model):
         a = Answr(text = answr_text, lang = lang, rand = rand)
         ApplicationData.incrementAnswrCounter()
         a.put()
-
-
-#class Question:
-#    """An answrd question."""
-#    question = db.StringProperty()
-#    answr = db.StringProperty()
-#    tech = db.StringProperty()
-#    who = db.StringProperty()
-#    lang = db.StringProperty()
 
 
 class ApplicationData(db.Model):

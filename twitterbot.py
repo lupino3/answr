@@ -39,9 +39,9 @@ logging.info("Got %d mentions to answr!" % len(mentions))
 
 # 3. Risposta in maniera casuale a tutti 
 for status in mentions:
-    answr = Answr.get_random()
-    api.update_status("@%s %s" % (status.author.screen_name, answr.text), status.id)
-    logging.info("I replied to @%s (%s) with %s, is that ok?" % (status.author.screen_name, status.text, answr.text))
+    answr = Answr.answr().text
+    api.update_status("@%s %s" % (status.author.screen_name, answr), status.id)
+    logging.info("I replied to @%s (%s) with %s, is that ok?" % (status.author.screen_name, status.text, answr))
 
     # Non so in che ordine mi sono tornati gli status..
     if status.id > last_id:

@@ -7,7 +7,7 @@ from models import Answr
 class XMPPHandler(webapp.RequestHandler):
     def post(self):
         message = xmpp.Message(self.request.POST)
-        message.reply(Answr.get_random().text)
+        message.reply(Answr.answr().text)
 
 application = webapp.WSGIApplication([('/_ah/xmpp/message/chat/', XMPPHandler)],
                                      debug=True)
