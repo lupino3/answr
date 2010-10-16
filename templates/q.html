@@ -14,8 +14,10 @@
         <link rel="icon" href="img/favicon.ico" />
 		<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
 
+		<style> html .fb_share_button { font-size:10px; display: -moz-inline-block; display:inline-block; padding:1px 20px 0 5px; height:15px; border:1px solid #d8dfea; background:url(http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif?7:26981) no-repeat top right; } html .fb_share_button:hover { color:#fff; border-color:#295582; background:#3b5998 url(http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif?7:26981) no-repeat top right; text-decoration:none; } </style> 
 		<script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"> </script>
         <script type="text/javascript">
+		function fbs_click(idd) {u='http://www.answr.it/q?id='+idd;t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}
 
 
         var first = true;
@@ -75,8 +77,8 @@
     	<div id="header">
             <a href="http://www.answr.it"><img id="logo" src="img/logo.png" border="0"></a>
 			<img id="border_right" src="img/stripes_right.png">
-            <a href="?lang=it"><img id="bandierina_it" src="img/flag_it.gif" width="20px"></a> 
-            <a href="?lang=en"><img id="bandierina_en" src="img/flag_en.gif" width="20px"></a> 
+            <a href="/?lang=it"><img id="bandierina_it" src="img/flag_it.gif" width="20px"></a> 
+            <a href="/?lang=en"><img id="bandierina_en" src="img/flag_en.gif" width="20px"></a> 
 		</div>
 		<div id="answr" >
 			<div id="cerca" >
@@ -85,10 +87,11 @@
 				</form>
 			</div>
 			<div id="loading" style="display:none"><img src="img/loading.gif" title="{{ loading }}"/></div>
-            <div  style="text-size:40;text-align:center" id="risposta">{{ answr }}</div>
+            <div style="text-size:40;text-align:center" id="risposta">{{ answr }}&nbsp;&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u=<url>" class="fb_share_button" onclick="return fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
+            </div>
 			<div  style="text-align:center" id="reload">
 				<a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
-                <b id="reload_text" style="display:none">{{ ask_again }}</b></a>
+                <b id="reload_text">{{ ask_again }}</b></a>
 			</div>
 			
 		</div>		

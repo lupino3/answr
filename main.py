@@ -20,7 +20,8 @@ class MainApp(webapp.RequestHandler):
             "restart" : "Please click to restart",
             "i_asked" : "I asked to answr",
             "and_he_replied" : "and he replied",
-            "ask_again" : "Ask another question!"
+            "ask_again" : "Ask another question!",
+            "share" : "Share"
         },
         "it" : {
             "lang"  : "it",
@@ -32,7 +33,8 @@ class MainApp(webapp.RequestHandler):
             "restart" : "Fai clic per ricominciare",
             "i_asked" : "Ho chiesto ad answr",
             "and_he_replied" : "e lui mi ha risposto",
-            "ask_again" : "Fai un'altra domanda!"
+            "ask_again" : "Chiedi ancora!",
+            "share" : "Condividi"
         }
     }
     
@@ -135,6 +137,7 @@ class QuestionApp(webapp.RequestHandler):
             template_strings = MainApp.lang_strings[question.lang]
             template_strings['question'] = question.text
             template_strings['answr'] = question.answr
+            template_strings['q_id'] = q
             logging.info("%s -> %s" % (question.text, question.answr))
 
             template_path = os.path.join(os.path.dirname(__file__), 'templates', 'q.html')
