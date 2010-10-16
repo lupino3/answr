@@ -122,7 +122,8 @@ class AnswrApp(webapp.RequestHandler):
         logging.info("Question saved. ID: " + str(question_id))
         logging.info("Headers: " + str(self.response.headers))
         
-        self.response.out.write(random_answr.to_json())
+        json_response = '{"text" : "%s", "q_id" : "%d"}' % (random_answr.text, question_id)
+        self.response.out.write(json_response)
 
 class QuestionApp(webapp.RequestHandler):
     def get(self):

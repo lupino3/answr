@@ -37,7 +37,9 @@
 				</form>
 			</div>
 			<div id="loading" style="display:none"><img src="img/loading.gif" title="{{ loading }}"/></div>
-            <div style="text-size:40;text-align:center" id="risposta">{{ answr }}&nbsp;&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u=<url>" class="fb_share_button" onclick="return fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
+            <div style="text-size:40;text-align:center" id="risposta">{{ answr }}&nbsp;&nbsp;&nbsp;
+                <a href="http://www.facebook.com/share.php?u=<url>"
+                    class="fb_share_button" onclick="return ANSWR.fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
             </div>
 			<div  style="text-align:center" id="reload">
 				<a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
