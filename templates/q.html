@@ -7,70 +7,20 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="Content-Style-Type" content="text/css">
         <meta http-equiv="Content-Script-Type" content="text/javascript">
-        <meta name="title" content="{{ i_asked }} {{ question }}" />
-        <meta name="description" content="{{ i_asked }} {{ question }}, {{ and_he_replied }} {{ answr }}" />
+        <meta name="title" content='{{ i_asked }} "{{ question }}"' />
+        <meta name="description" content='{{ i_asked }} "{{ question }}", {{ and_he_replied }} "{{ answr }}"' />
         <meta property="fb:admins" content="1214732280" />
 
         <link rel="icon" href="img/favicon.ico" />
 		<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
 
-		<style> html .fb_share_button { font-size:10px; display: -moz-inline-block; display:inline-block; padding:1px 20px 0 5px; height:15px; border:1px solid #d8dfea; background:url(http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif?7:26981) no-repeat top right; } html .fb_share_button:hover { color:#fff; border-color:#295582; background:#3b5998 url(http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif?7:26981) no-repeat top right; text-decoration:none; } </style> 
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"> </script>
         <script type="text/javascript">
-		function fbs_click(idd) {u='http://www.answr.it/q?id='+idd;t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}
-
-
-        var first = true;
-        function answrit(id){
-            if(first){
-                if(id>0) $("input#input_cerca").val($("#domanda_"+id).html());
-                
-                var domanda = $("input#input_cerca").serialize();
-                if($("input#input_cerca").val() == "{{ type_your_question }}" || $("input#input_cerca").val() == ""){
-                    alert("{{ must_ask }}");
-                }
-                else{
-                    $("#risposta").hide();
-                    $("#loading").show();
-                    $.get("/answr", {'lang' : '{{ lang }}', 'question' :  $("input#input_cerca").val()}, 
-                        function(data){
-                            data = JSON.parse(data);
-
-                            $("#risposta").text(data["text"]);
-                            $("#loading").fadeOut("slow", function(){
-                                $("#risposta").fadeIn("slow",function(){
-                                    
-                                    $("input#input_cerca").attr("disabled", true);
-                                    $("input#input_cerca").css("width", "750px");
-                                    $("#img_cerca").fadeOut();
-                                    $("#risposta").animate({ 
-                                            fontSize: 40
-                                        }, 1500 ,function() {
-                                            $("#reload").fadeIn('slow');
-                                            lampeggia();
-                                        }
-                                    );
-                                });
-                            });
-                        }
-                    );
-                }
-                first = false;
-            }
-            return false;
-        }
-
-        function lampeggia(){
-            $('#reload_text').fadeIn('slow',function(){
-                $('#reload_text').fadeOut('slow',function(){
-                    $('#previous').fadeOut('slow');
-                    lampeggia();
-                })
-            });
-        }
-
-
+            // Set the UI language (comes from the backend)
+            var lang = "{{ lang }}";
         </script>
+
+		<script type="text/javascript" src="/js/jquery-1.2.6.min.js"> </script>
+        <script type="text/javascript" src="/js/answr.js"></script>
     </head>
     <body >
     <div id="content">

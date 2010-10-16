@@ -12,61 +12,13 @@
         <link rel="icon" href="img/favicon.ico" />
 		<link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
 
-		<script type="text/javascript" src="http://code.jquery.com/jquery-1.2.6.min.js"> </script>
         <script type="text/javascript">
-
-
-        var first = true;
-        function answrit(id){
-            if(first){
-                if(id>0) $("input#input_cerca").val($("#domanda_"+id).html());
-                
-                var domanda = $("input#input_cerca").serialize();
-                if($("input#input_cerca").val() == "{{ type_your_question }}" || $("input#input_cerca").val() == ""){
-                    alert("{{ must_ask }}");
-                }
-                else{
-                    $("#risposta").hide();
-                    $("#loading").show();
-                    $.get("/answr", {'lang' : '{{ lang }}', 'question' :  $("input#input_cerca").val()}, 
-                        function(data){
-                            data = JSON.parse(data);
-
-                            $("#risposta").text(data["text"]);
-                            $("#loading").fadeOut("slow", function(){
-                                $("#risposta").fadeIn("slow",function(){
-                                    
-                                    $("input#input_cerca").attr("disabled", true);
-                                    $("input#input_cerca").css("width", "750px");
-                                    $("#img_cerca").fadeOut();
-                                    $("#risposta").animate({ 
-                                            fontSize: 40
-                                        }, 1500 ,function() {
-                                            $("#reload").fadeIn('slow');
-                                            lampeggia();
-                                        }
-                                    );
-                                });
-                            });
-                        }
-                    );
-                }
-                first = false;
-            }
-            return false;
-        }
-
-        function lampeggia(){
-            $('#reload_text').fadeIn('slow',function(){
-                $('#reload_text').fadeOut('slow',function(){
-                    $('#previous').fadeOut('slow');
-                    lampeggia();
-                })
-            });
-        }
-
-
+            // Set the UI language (comes from the backend)
+            var lang = "{{ lang }}";
         </script>
+
+		<script type="text/javascript" src="/js/jquery-1.2.6.min.js"> </script>
+        <script type="text/javascript" src="/js/answr.js"></script>
     </head>
     <body >
     <div id="content">
@@ -78,16 +30,20 @@
 		</div>
 		<div id="answr" >
 			<div id="cerca" >
-				<form name="rispondi" onSubmit="return answrit()">
-                <input type="text" value="{{ type_your_question }}" name="cerca" id="input_cerca" onclick="$('input#input_cerca').val('')" onsubmit="answrit()"/>
-                <img id="img_cerca" src="img/answrit.png" title="{{ get_answer }}" onclick="answrit()">
+				<form name="rispondi" onSubmit="return ANSWR.answrit()">
+                <input type="text" value="{{ type_your_question }}" name="cerca" id="input_cerca" onclick="$('input#input_cerca').val('')" onsubmit="ANSWR.answrit()"/>
+                <img id="img_cerca" src="img/answrit.png" title="{{ get_answer }}" onclick="ANSWR.answrit()">
 				</form>
 			</div>
 			<div id="loading" style="display:none"><img src="img/loading.gif" title="{{ loading }}"/></div>
-			<div  style="display:none;text-align:center" id="risposta"></div>
+            <div style="display:none;text-align:center" id="risposta">
+                <span id = "text"></span>
+&nbsp;&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u=<url>" class="fb_share_button" onclick="return fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
+
+            </div>
 			<div  style="display:none;text-align:center" id="reload">
 				<a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
-                <b id="reload_text" style="display:none">{{ restart }}</b></a>
+                    <b id="reload_text" style="display:none">{{ restart }}</b></a>
 			</div>
 			
 		</div>		

@@ -1,5 +1,5 @@
 application: answr-it
-version: 26
+version: 27
 runtime: python
 api_version: 1
 
@@ -33,6 +33,9 @@ handlers:
 
 - url: /img
   static_dir: static/img
+
+- url: /js
+  static_dir: static/js
 
 inbound_services:
 - xmpp_message
