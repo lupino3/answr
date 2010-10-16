@@ -84,7 +84,7 @@ color:#256486;
 	position:absolute;
 	left:20px;
 	bottom:1px;
-	
+    width: 100%;
 }
 #answr{
 	left:200px;
@@ -194,4 +194,15 @@ html .fb_share_button:hover {
     border-color:#295582;
     background:#3b5998 url(http://static.ak.fbcdn.net/images/share/facebook_share_icon.gif?7:26981) no-repeat top right;
     text-decoration:none; 
+}
+
+p#code {
+    font-size: 9px;
+    position:absolute;
+    right:50px;
+    text-align: right;
+}
+
+div#fblike {
+    text-align: left;
 }
