@@ -7,8 +7,10 @@
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta http-equiv="Content-Style-Type" content="text/css">
         <meta http-equiv="Content-Script-Type" content="text/javascript">
-        <meta name="title" content='{{ i_asked }} "{{ question }}"' />
-        <meta name="description" content='{{ i_asked }} "{{ question }}", {{ and_he_replied }} "{{ answr }}"' />
+        {% if q_id %}
+            <meta name="title" content='{{ i_asked }} "{{ question }}"' />
+            <meta name="description" content='{{ i_asked }} "{{ question }}", {{ and_he_replied }} "{{ answr }}"' />
+        {% endif %}
         <meta property="fb:admins" content="1214732280" />
 
         <link rel="icon" href="img/favicon.ico" />
@@ -32,19 +34,39 @@
 		</div>
 		<div id="answr" >
 			<div id="cerca" >
-				<form name="rispondi" onSubmit="return false">
-                <input type="text" value="{{ question }}" name="cerca" id="input_cerca" disabled style="width:750px"/>
+                {% if q_id %}
+                    <form name="rispondi" onSubmit="return false">
+                    <input type="text" value="{{ question }}" name="cerca" id="input_cerca" disabled style="width:750px"/>
+                {% else %}
+                     <form name="rispondi" onSubmit="return ANSWR.answrit()">
+                     <input type="text" value="{{ type_your_question }}" name="cerca" id="input_cerca" onclick="$('input#input_cerca').val('')" onsubmit="ANSWR.answrit()"/>
+                     <img id="img_cerca" src="img/answrit.png" title="{{ get_answer }}" onclick="ANSWR.answrit()">
+                {% endif %}
+                    
 				</form>
 			</div>
 			<div id="loading" style="display:none"><img src="img/loading.gif" title="{{ loading }}"/></div>
-            <div style="text-size:40;text-align:center" id="risposta">{{ answr }}&nbsp;&nbsp;&nbsp;
-                <a href="http://www.facebook.com/share.php?u=<url>"
-                    class="fb_share_button" onclick="return ANSWR.fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
-            </div>
-			<div  style="text-align:center" id="reload">
-				<a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
-                <b id="reload_text">{{ ask_again }}</b></a>
-			</div>
+            {% if q_id %}
+                <div style="text-size:40;text-align:center" id="risposta">{{ answr }}&nbsp;&nbsp;&nbsp;
+                    <a href="http://www.facebook.com/share.php?u=<url>"
+                        class="fb_share_button" onclick="return ANSWR.fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
+                </div>
+                <div  style="text-align:center" id="reload">
+                    <a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
+                    <b id="reload_text">{{ ask_again }}</b></a>
+                </div>
+            {% else %}
+                <div style="display:none;text-align:center" id="risposta">
+                    <span id = "text"></span>
+    &nbsp;&nbsp;&nbsp;<a href="http://www.facebook.com/share.php?u=<url>"
+        class="fb_share_button" onclick="return ANSWR.fbs_click('{{ q_id }}')" target="_blank" style="text-decoration:none;">{{ share }}</a>
+
+                </div>
+                <div  style="display:none;text-align:center" id="reload">
+                    <a href="/"><img src="img/reload.gif" border="0" onmouseover=";" onmouseout="$('#reload_text').fadeOut('slow');"/>
+                        <b id="reload_text" style="display:none">{{ restart }}</b></a>
+                </div>
+            {% endif %}
 			
 		</div>		
 

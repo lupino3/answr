@@ -25,6 +25,7 @@ var ANSWR = {
     },
 
     'question_id' : null,
+    'question_text' : null,
 
     'answrit' : function() {
         if(!ANSWR.answrd){
@@ -40,6 +41,7 @@ var ANSWR = {
 
                         $("#risposta > #text").text(data["text"]);
                         ANSWR.question_id = data["q_id"];
+                        ANSWR.question_text = data["q_text"];
                         $("#loading").fadeOut("slow", function(){
                             $("#risposta").fadeIn("slow",function(){
                                 

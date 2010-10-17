@@ -70,7 +70,7 @@ class MainApp(webapp.RequestHandler):
 
     def get(self):
         language, language_strings = self.detect_language()
-        template_path = os.path.join(os.path.dirname(__file__), 'templates', 'index.html')
+        template_path = os.path.join(os.path.dirname(__file__), 'templates', 'answr.html')
 
         # Save to a cookie the detected language
         self.response.headers.add_header('Set-Cookie', 'answrlang=%s' % language)
@@ -111,18 +111,22 @@ class MainApp(webapp.RequestHandler):
 class AnswrApp(webapp.RequestHandler):
     def get(self):
         self.response.headers['Content-Type'] = 'application/json'
+
+        # Please, browser, don't cache my answrs!
+        self.response.headers['Pragma'] = 'no-cache'
         try:
+            # The JS code should pass me the language
             lang = self.request.get('lang')
         except Exception, e:
             logging.warning('Failed to get parameter lang, switching back to default')
             lang = "en"
 
         random_answr = Answr.answr(lang)
-        question_id = Question.save(self.request.get('question'), random_answr.text, tech = 'web', lang = lang, who = str(self.request.remote_addr))
+        q_text = self.request.get('question')
+        question_id = Question.save(q_text, random_answr.text, tech = 'web', lang = lang, who = str(self.request.remote_addr))
         logging.info("Question saved. ID: " + str(question_id))
-        logging.info("Headers: " + str(self.response.headers))
         
-        json_response = '{"text" : "%s", "q_id" : "%d"}' % (random_answr.text, question_id)
+        json_response = '{"text" : "%s", "q_id" : "%d", "q_text": "%s"}' % (random_answr.text, question_id, q_text)
         self.response.out.write(json_response)
 
 class QuestionApp(webapp.RequestHandler):
@@ -139,7 +143,7 @@ class QuestionApp(webapp.RequestHandler):
             template_strings['q_id'] = q
             logging.info("%s -> %s" % (question.text, question.answr))
 
-            template_path = os.path.join(os.path.dirname(__file__), 'templates', 'q.html')
+            template_path = os.path.join(os.path.dirname(__file__), 'templates', 'answr.html')
 
             # Output the response
             self.response.out.write(template.render(template_path, template_strings))
