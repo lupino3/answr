@@ -1,0 +1,25 @@
+Answr.it
+--------
+Answr.it is a simple web site that mimicks the Answer Book, a book full of
+answers that you open at a random page after thinking of a question.
+
+You ask him a question, and he will answer you with a random answer.
+
+Technology
+----------
+The software was born in a few evenings, and its first version was written in
+PHP + JS. After the expiration of the domain, one of the authors - Andrea -
+rewrote the backend in python in order to get his hands dirty with Google App
+Engine.
+
+Question media
+--------------
+Questions can be asked via web at http://www.answr.it, via twitter asking
+@answrit and via XMPP writing to answr-it@appspot.com
+
+License
+-------
+answr.it is released under the GNU Affero GPL version 3, a license that protects
+your freedom as a user and as a developer, even if the application is not
+distributed and executed on your machine but it is used via computer networks.
+You can find more details in the COPYING file.
