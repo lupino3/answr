@@ -1,6 +1,7 @@
 import logging
 import tweepy
 from models import ApplicationData, Answr, Question
+from utils import detect_language_from_msg
 
 logging.info('Running the answr twitterbot!')
 
@@ -40,8 +41,15 @@ logging.info("Got %d mentions to answr!" % len(mentions))
 # 3. Random answrs for everybody!
 for status in mentions:
     # TODO 3.1: implement basic language detection
-    answr = Answr.answr().text
-    Question.save(status.text, answr, 'twitter', "@%s" % status.author.screen_name, "en")
+    try:
+        question = " ".join([x for x in status.text.split() if not x.startswith('@')])
+        lang, confidence = detect_language_from_msg(question)
+    except:
+        logging.warning("Error during language detection. Switching back to en")
+        lang = "en"
+
+    answr = Answr.answr(lang).text
+    Question.save(status.text, answr, 'twitter', "@%s" % status.author.screen_name, lang)
     api.update_status("@%s %s" % (status.author.screen_name, answr), status.id)
     logging.info("I replied to @%s (%s) with %s, is that ok?" % (status.author.screen_name, status.text, answr))
 
