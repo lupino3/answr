@@ -13,6 +13,10 @@ handlers:
 - url: /q
   script: main.py
 
+- url: /add
+  login: admin
+  script: main.py
+
 - url: /populate
   login: admin
   script: populate.py
@@ -36,6 +40,7 @@ handlers:
 
 - url: /js
   static_dir: static/js
+
 
 inbound_services:
 - xmpp_message

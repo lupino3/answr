@@ -7,6 +7,8 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext.webapp import template
 
 from models import Question, Answr
+from utils import detect_language_from_msg
+
 
 class MainApp(webapp.RequestHandler):
     lang_strings = {
@@ -123,6 +125,8 @@ class AnswrApp(webapp.RequestHandler):
 
         random_answr = Answr.answr(lang)
         q_text = self.request.get('question')
+        l, conf = detect_language_from_msg(q_text)
+        logging.warning("detected %s (%.2f)" % (l, conf))
         question_id = Question.save(q_text, random_answr.text, tech = 'web', lang = lang, who = str(self.request.remote_addr))
         logging.info("Question saved. ID: " + str(question_id))
         
@@ -151,7 +155,14 @@ class QuestionApp(webapp.RequestHandler):
             logging.warning('Something went wrong with question permalink: %s' % str(e))
             self.redirect('/')
 
-application = webapp.WSGIApplication([('/answr', AnswrApp), ('/', MainApp), ('/q', QuestionApp)], debug = True)
+class AddApp(webapp.RequestHandler):
+    def get(self):
+        html_path = os.path.join(os.path.dirname(__file__), 'static', 'add.html')
+        self.response.out.write(file(html_path).read())
+
+
+application = webapp.WSGIApplication([('/answr', AnswrApp), ('/', MainApp),
+    ('/q', QuestionApp), ('/add', AddApp)], debug = True)
 
 if __name__ == '__main__':
     run_wsgi_app(application)
