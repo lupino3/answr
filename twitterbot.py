@@ -40,7 +40,6 @@ logging.info("Got %d mentions to answr!" % len(mentions))
 
 # 3. Random answrs for everybody!
 for status in mentions:
-    # TODO 3.1: implement basic language detection
     try:
         question = " ".join([x for x in status.text.split() if not x.startswith('@')])
         lang, confidence = detect_language_from_msg(question)
