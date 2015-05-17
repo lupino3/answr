@@ -28,6 +28,9 @@ handlers:
 - url: /twitterbot
   login: admin
   script: twitterbot.py
+  
+- url: /momenti
+  script: momenti.py
 
 - url: /_ah/xmpp/message/chat/
   script: xmpp.py
